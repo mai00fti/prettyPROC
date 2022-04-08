@@ -37,6 +37,8 @@ All values are returned in a [tidyverse::tibble()] with the columns
 You may plot these metrics along the different thresholds with the package function [model_metrics_curves()].
 }
 \examples{
+y_true <- sample(c(0,1), replace = TRUE, size = 1000)
+y_predicted <- runif(1000)
 data <- get_threshold_data(truth = y_true, prediction = y_predicted)
 data \%>\% head()
 data \%>\% colnames()

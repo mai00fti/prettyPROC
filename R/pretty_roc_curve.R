@@ -18,6 +18,8 @@
 #'         provided [tibble()], the threshold that corresponds to this max value.
 #'
 #' @examples
+#' y_true <- sample(c(0,1), replace = TRUE, size = 1000)
+#' y_predicted <- runif(1000)
 #' data <- get_threshold_data(truth = y_true, prediction = y_predicted)
 #' roc <- pretty_roc_curve(df = data,
 #'                         plot_title = "ROC curve")
@@ -27,6 +29,9 @@
 pretty_roc_curve <- function(df, plot_title, x_col = "fpr", y_col = "tpr", col_col = "threshold", auc_col = "roc_auc",
                              colors = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F",
                                         "yellow", "#FF7F00", "red", "#7F0000")) {
+  df <- df %>%
+    dplyr::filter(Metric %in% c(x_col, y_col, col_col, auc_col)) %>%
+    tidyr::pivot_wider(names_from = Metric, values_from = Value)
   max_auc <- df[[auc_col]] %>% max()
   idx_max_auc <- which(df[[auc_col]] == max_auc)
   tr_max_auc <- df[[col_col]][idx_max_auc] %>% round(digits = 2)
@@ -44,7 +49,7 @@ pretty_roc_curve <- function(df, plot_title, x_col = "fpr", y_col = "tpr", col_c
                        label = paste0("AUC = ", max_auc), vjust = -2, hjust = 1.5, size = 5, fontface = "plain") +
     ggplot2::geom_text(x = df[[x_col]][idx_max_auc], y = df[[y_col]][idx_max_auc],
                        label = paste0("threshold = ", tr_max_auc), vjust = 0, hjust = 1.5, size = 5, fontface = "plain") +
-    ggplot2::scale_color_gradientn(colors = jet_colors, space = "Lab") +
+    ggplot2::scale_color_gradientn(colors = colors, space = "Lab") +
     ggplot2::labs(title = plot_title,
                   subtitle = "Thresholds are sampled from the predicted values",
                   caption = paste(sep = "\n",

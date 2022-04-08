@@ -14,10 +14,12 @@
 #' @param colors - A vector of colors from which a gradient will be generated.
 #'                 Default: c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")
 #'
-#' @return A list containing the plot as ggplot2, the maximal F1 score (or [f1_col]), the index of this max value in the
-#'         provided the threshold that corresponds to this max value.
+#' @return A list containing the plot as ggplot2, the maximal F1 score (or [f1_col]), and the threshold that corresponds
+#'         to this max value.
 #'
 #' @examples
+#' y_true <- sample(c(0,1), replace = TRUE, size = 1000)
+#' y_predicted <- runif(1000)
 #' data <- get_threshold_data(truth = y_true, prediction = y_predicted)
 #' pr <- pretty_pr_curve(df = data,
 #'                       plot_title = "Precision-recall curve")
@@ -31,6 +33,9 @@ pretty_pr_curve <- function(df, plot_title, x_col = "Recall", y_col = "Precision
     filter(Metric == "pr_baseline") %>%
     head(1) %>%
     pull(Value)
+  df <- df %>%
+    dplyr::filter(Metric %in% c(x_col, y_col, col_col, f1_col)) %>%
+    tidyr::pivot_wider(names_from = Metric, values_from = Value)
   max_f1 <- df[[f1_col]] %>% max()
   idx_max_f1 <- which(df[[f1_col]] == max_f1)
   tr_max_f1 <- df[[col_col]][idx_max_f1] %>% round(digits = 2)
@@ -39,7 +44,7 @@ pretty_pr_curve <- function(df, plot_title, x_col = "Recall", y_col = "Precision
     geom_hline(aes(yintercept = baseline), linetype = "dashed", color = "grey") +
     lims(x = c(0, 1), y = c(0, 1)) +
     geom_point(aes(x = .data[[x_col]], y = .data[[y_col]], color = .data[[col_col]])) +
-    scale_color_gradientn(colors = jet_colors, space = "Lab") +
+    scale_color_gradientn(colors = colors, space = "Lab") +
     geom_point(x = df[[x_col]][idx_max_f1], y = df[[y_col]][idx_max_f1],
                pch = 21, color = "black", size = 5) +
     geom_text(x = df[[x_col]][idx_max_f1], y = df[[y_col]][idx_max_f1],
@@ -57,7 +62,6 @@ pretty_pr_curve <- function(df, plot_title, x_col = "Recall", y_col = "Precision
       plot.caption = element_text(face = "italic")
     )
   return(list("plot" = p,
-              "max_auc" = max_auc,
-              "max_auc_idx" = idx_max_auc,
-              "max_auc_threshold" = tr_max_auc))
+              "max_auc" = max_f1,
+              "max_auc_threshold" = tr_max_f1))
 }

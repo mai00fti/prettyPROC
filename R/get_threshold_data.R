@@ -13,9 +13,9 @@
 #' - pr_baseline - The baseline for a precision-recall curve. pr_baseline = P / N_samples
 #'
 #' All values are returned in a [tidyverse::tibble()] with the columns
-#' - Metric - containing the name of the metric
-#' - Value - containing the value of the metric
-#' - threshold - containing the threshold, for threshold independet metrics, the metric value is the same for all
+#' `Metric` - containing the name of the metric;
+#' `Value` - containing the value of the metric;
+#' `threshold` - containing the threshold, for threshold independet metrics, the metric value is the same for all
 #'               thresholds
 #'
 #' You may plot these metrics along the different thresholds with the package function [model_metrics_curves()].
@@ -26,6 +26,8 @@
 #' @return A tibble containing all metrics with their values for each threshold
 #'
 #' @examples
+#' y_true <- sample(c(0,1), replace = TRUE, size = 1000)
+#' y_predicted <- runif(1000)
 #' data <- get_threshold_data(truth = y_true, prediction = y_predicted)
 #' data %>% head()
 #' data %>% colnames()
@@ -40,7 +42,7 @@ get_threshold_data <- function(truth, prediction) {
     prediction_tr <- ifelse(prediction >= tr, 1, 0)
     prediction_tr_f <- factor(prediction_tr, levels = c(1, 0))
     cfm <- caret::confusionMatrix(data = prediction_tr_f, reference = truth_f)
-    rbind(enframe(cfm$byClass, name = "Metric", value = "Value"),
+    rbind(tibble::enframe(cfm$byClass, name = "Metric", value = "Value"),
           cfm$table %>%
             tibble::as_tibble() %>%
             dplyr::mutate("Metric" = c("TP", "FN", "FP", "TN")) %>%

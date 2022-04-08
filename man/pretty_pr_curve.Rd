@@ -33,8 +33,8 @@ Default: c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00",
 not want to show the AUC line}
 }
 \value{
-A list containing the plot as ggplot2, the maximal F1 score (or [f1_col]), the index of this max value in the
-        provided the threshold that corresponds to this max value.
+A list containing the plot as ggplot2, the maximal F1 score (or [f1_col]), and the threshold that corresponds
+        to this max value.
 }
 \description{
 This function plots a pretty PR (precision-recall curve) using the values from the [tidyverse::tibble()] that
@@ -42,6 +42,8 @@ can be generated with the package function [get_threshold_data()].
 It colors the curve according to the value of the threshold, and annotates and labels the threshold with maximal F1.
 }
 \examples{
+y_true <- sample(c(0,1), replace = TRUE, size = 1000)
+y_predicted <- runif(1000)
 data <- get_threshold_data(truth = y_true, prediction = y_predicted)
 pr <- pretty_pr_curve(df = data,
                       plot_title = "Precision-recall curve")

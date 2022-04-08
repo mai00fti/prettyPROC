@@ -26,6 +26,8 @@ This can be inspiring to evaluate the selection of a threshold for different lea
 A selected threshold value can be provided to set a vertical mark in the plot
 }
 \examples{
+y_true <- sample(c(0,1), replace = TRUE, size = 1000)
+y_predicted <- runif(1000)
 data <- get_threshold_data(truth = y_true, prediction = y_predicted)
 plot <- model_metrics_curves(df = data,
                              metrics = c("Sensitivity", "F1", "Balanced Accuracy"),

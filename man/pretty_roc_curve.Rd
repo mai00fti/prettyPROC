@@ -42,6 +42,8 @@ can be generated with the package function [get_threshold_data()].
 It colors the curve according to the value of the threshold, and annotates and labels the threshold with maximal AUC.
 }
 \examples{
+y_true <- sample(c(0,1), replace = TRUE, size = 1000)
+y_predicted <- runif(1000)
 data <- get_threshold_data(truth = y_true, prediction = y_predicted)
 roc <- pretty_roc_curve(df = data,
                         plot_title = "ROC curve")
