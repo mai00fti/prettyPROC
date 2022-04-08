@@ -28,11 +28,11 @@ Within these plots, the best threshold is annotated, labeled, and returned:
 
 |                  Precision-Recall curve                  |            Receiver operator curv            |
 |:--------------------------------------------------------:|:--------------------------------------------:|
-| ![Precision-recall curve](01_precision_recall.png =x400) | ![Receiver-operator curve](02_roc.png =x400) |
+| ![Precision-recall curve](./01_precision_recall.png =x400) | ![Receiver-operator curve](./02_roc.png =x400) |
 
 |                  Metrics vs. threshold                   |
 |:--------------------------------------------------------:|
-| ![Metrics vs. threshold](03_metrics_threshold.png =x800) |
+| ![Metrics vs. threshold](./03_metrics_threshold.png =x800) |
 
 
 ## Installation
