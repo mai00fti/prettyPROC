@@ -1,6 +1,6 @@
 # The `prettyPROC` `R` package
 
-Print pretty PR and ROC curves that also allow for threshold selection
+Print pretty PR and ROC curves that also allow for threshold selection in ML classification problems.
 
 ## Author
 
@@ -24,7 +24,16 @@ threshold and generates pretty plots of the results.
 * Model metrics vs threshold
 * Any model metric against any other model metric w.r.t. to the classifiation threshold.
 
-Within these plots, the best threshold is annotated, labeled, and returned.
+Within these plots, the best threshold is annotated, labeled, and returned:
+
+Precision-Recall curve | Receiver operator curv
+:----------------------:|:----------------------:
+![Precision-recall curve](https://github.com/mai00fti/prettyPROC/01_precision_recall.png =x400) | ![Receiver-operator curve](https://github.com/mai00fti/prettyPROC/02_roc.png =x400)
+
+Metrics vs. threshold |
+:---------------------:|
+![Metrics vs. threshold](https://github.com/mai00fti/prettyPROC/03_metrics_threshold.png =x800)|
+
 
 ## Installation
 
