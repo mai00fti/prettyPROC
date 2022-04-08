@@ -1,0 +1,19 @@
+Package: prettyPROC
+Type: Package
+Title: Print pretty PR and ROC curves
+Version: 1.0
+Date: 2022-04-08
+Author: Jana Schor
+Maintainer: Jana Schor <schor.jana@gmail.com>
+Description: Print pretty PR and ROC curves that also allow for threshold selection
+License: GPL-3
+RoxygenNote: 7.1.2
+Depends: R (>= 4.0.0)
+Imports:
+    tidyverse,
+    dplyr,
+    ggplot2,
+    caret,
+    ModelMetrics,
+    RColorBrewer,
+    gridExtra
