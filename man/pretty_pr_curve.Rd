@@ -6,7 +6,7 @@
 \usage{
 pretty_pr_curve(
   df,
-  plot_title,
+  plot_title = "Precision-recall curve",
   x_col = "Recall",
   y_col = "Precision",
   col_col = "threshold",

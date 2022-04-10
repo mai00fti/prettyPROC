@@ -26,7 +26,8 @@
 #' show(roc$plot)
 #'
 #' @export
-pretty_roc_curve <- function(df, plot_title, x_col = "fpr", y_col = "tpr", col_col = "threshold",
+pretty_roc_curve <- function(df, plot_title = "Receiver-operator curve",
+                             x_col = "fpr", y_col = "tpr", col_col = "threshold",
                              auc_col = "roc_auc_tr", colors = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F",
                                                                 "yellow", "#FF7F00", "red", "#7F0000")) {
   AUC <- df$roc_auc[1]
@@ -47,7 +48,7 @@ pretty_roc_curve <- function(df, plot_title, x_col = "fpr", y_col = "tpr", col_c
     ggplot2::geom_point(x = df[[x_col]][idx_max_auc], y = df[[y_col]][idx_max_auc],
                         pch = 21, color = "black", size = 5) +
     ggplot2::geom_text(x = df[[x_col]][idx_max_auc], y = df[[y_col]][idx_max_auc],
-                       label = paste0("AUC = ", max_auc), vjust = -2, hjust = 1.5, size = 5, fontface = "plain") +
+                       label = paste0("AUC_tr = ", max_auc), vjust = -2, hjust = 1.5, size = 5, fontface = "plain") +
     ggplot2::geom_text(x = df[[x_col]][idx_max_auc], y = df[[y_col]][idx_max_auc],
                        label = paste0("threshold = ", tr_max_auc), vjust = 0, hjust = 1.5, size = 5, fontface = "plain") +
     ggplot2::geom_text(x = 0.8, y = 0.05,

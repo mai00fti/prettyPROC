@@ -6,11 +6,11 @@
 \usage{
 pretty_roc_curve(
   df,
-  plot_title,
+  plot_title = "Receiver-operator curve",
   x_col = "fpr",
   y_col = "tpr",
   col_col = "threshold",
-  auc_col = "roc_auc",
+  auc_col = "roc_auc_tr",
   colors = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00",
     "red", "#7F0000")
 )
@@ -33,8 +33,8 @@ not want to show the AUC line}
 Default: c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")}
 }
 \value{
-A list containing the plot as ggplot2, the maximal AUC (or [auc_col]), the index of this max value in the
-        provided [tibble()], the threshold that corresponds to this max value.
+A list containing the plot as ggplot2, the maximal AUC (or [auc_col] dep. on the threshold) and the threshold
+that corresponds to this max value.
 }
 \description{
 This function plots a pretty ROC (receiver-operator curve) using the values from the [tidyverse::tibble()] that

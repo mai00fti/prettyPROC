@@ -44,7 +44,7 @@ get_threshold_data <- function(truth, prediction) {
   P <- sum(truth)
   N <- LEN - P
   AUC <- ModelMetrics::auc(actual = truth, predicted = prediction)
-  thresholds <- 1:1000 /1000
+  thresholds <- prediction
   # loop through all unique prediction values and use these as thresholds
   return(do.call(rbind, lapply(thresholds, function(tr) {
     prediction_tr <- ifelse(prediction >= tr, 1, 0)

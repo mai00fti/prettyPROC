@@ -9,15 +9,21 @@ model_metrics_curves(df, metrics, plot_title, threshold = NA)
 \arguments{
 \item{df}{- The tibble that can be generated with the package function [get_threshold_data()]}
 
-\item{metrics}{- A selection of metrics that will be plotted. Note, that some of the returned metrics mean
-principally the same: Recall = Sensitivity, Precision = PPV, BalancedAccuracy = roc_auc}
+\item{metrics}{- A character vectore of metrics that will be plotted. Note, that some of the returned metrics mean
+principally the same: Recall = Sensitivity, Precision = PPV, BalancedAccuracy = roc_auc.
+The available metrics are: "Sensitivity", "Specificity", "Pos Pred Value", "Neg Pred Value",
+                           "Precision", "Recall", "F1", "Prevalence", "Detection Rate",
+                           "Detection Prevalence", "Balanced Accuracy", "TP", "FN", "FP",
+                           "TN", "P", "N", "N_samples", "pr_baseline", "P_pred", "N_pred", "fpr",
+                           "tpr", "tnr", "fnr", "roc_auc"}
 
 \item{plot_title}{- A title for your plot}
 
 \item{threshold}{- The threshold that should be marked with a vertical dashed line. Optional.}
 }
 \value{
-A ggplot2 object is returned which can be extended by further ggplot functions, be showed and saved.
+A ggplot2 object is returned which can be extended by further ggplot functions, be showed and saved. NULL is
+        returned, if none of the requested metrics is available
 }
 \description{
 This function uses the tibble that can be generated with the package function [get_threshold_data()] and plots

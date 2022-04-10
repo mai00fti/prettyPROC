@@ -26,7 +26,8 @@
 #' show(pr$plot)
 #'
 #' @export
-pretty_pr_curve <- function(df, plot_title, x_col = "Recall", y_col = "Precision", col_col = "threshold", f1_col = "F1",
+pretty_pr_curve <- function(df, plot_title = "Precision-recall curve",
+                            x_col = "Recall", y_col = "Precision", col_col = "threshold", f1_col = "F1",
                             colors = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F",
                                        "yellow", "#FF7F00", "red", "#7F0000")) {
   baseline <- df %>%
