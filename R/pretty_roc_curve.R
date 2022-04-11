@@ -33,6 +33,7 @@ pretty_roc_curve <- function(df, plot_title = "Receiver-operator curve",
   AUC <- df$roc_auc[1]
   df <- df %>%
     dplyr::filter(Metric %in% c(x_col, y_col, col_col, auc_col)) %>%
+    unique() %>%
     tidyr::pivot_wider(names_from = Metric, values_from = Value)
   max_auc <- df[[auc_col]] %>% max()
   idx_max_auc <- which(df[[auc_col]] == max_auc)[1]
