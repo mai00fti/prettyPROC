@@ -46,7 +46,7 @@ model_metrics_curves <- function(df, metrics, plot_title, threshold = NA) {
   p <- ggplot(df %>% filter(Metric %in% metrics),
               aes(x = threshold, y = Value)) +
     geom_line(aes(color = Metric))
-  if (!is.na(threshold)) {
+  if (length(threshold) == 0 | !is.na(threshold)) {
     p <- p +
       geom_vline(xintercept = threshold, linetype = "dashed", color = "grey")
   }
@@ -55,7 +55,7 @@ model_metrics_curves <- function(df, metrics, plot_title, threshold = NA) {
     labs(title = plot_title,
          subtitle = "Thresholds are sampled from the predicted values",
          caption = paste(sep = "\n",
-                         "Some metrics mean the same:",
+                         # " Some metrics mean the same:",
                          "Recall = Sensitivity, Precision = PPV, BalancedAccuracy = roc_auc")) +
     theme_classic() +
     theme(

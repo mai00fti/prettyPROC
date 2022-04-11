@@ -66,7 +66,9 @@ get_threshold_data <- function(truth, prediction) {
           tibble::tibble_row(Metric = "tpr", Value = tpr(tp = cfm$table[4], fn = cfm$table[3])),
           tibble::tibble_row(Metric = "tnr", Value = tnr(tn = cfm$table[1], fp = cfm$table[2])),
           tibble::tibble_row(Metric = "fnr", Value = fnr(tp = cfm$table[4], fn = cfm$table[3])),
-          tibble::tibble_row(Metric = "roc_auc_tr", Value = ModelMetrics::auc(truth_f, prediction_tr_f))) %>%
+          tibble::tibble_row(Metric = "roc_auc_tr", Value = ModelMetrics::auc(truth_f, prediction_tr_f)),
+          tibble::tibble_row(Metric = "mcc_tr", Value = mcc(cfm$table))
+    ) %>%
       dplyr::mutate("threshold" = tr) %>%
       dplyr::mutate("roc_auc" = AUC)
   }))

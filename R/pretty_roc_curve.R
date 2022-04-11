@@ -30,36 +30,45 @@ pretty_roc_curve <- function(df, plot_title = "Receiver-operator curve",
                              x_col = "fpr", y_col = "tpr", col_col = "threshold",
                              auc_col = "roc_auc_tr", colors = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F",
                                                                 "yellow", "#FF7F00", "red", "#7F0000")) {
-  AUC <- df$roc_auc[1]
   df <- df %>%
     dplyr::filter(Metric %in% c(x_col, y_col, col_col, auc_col)) %>%
     unique() %>%
-    tidyr::pivot_wider(names_from = Metric, values_from = Value)
+    tidyr::pivot_wider(names_from = Metric, values_from = Value) %>%
+    dplyr::filter(!is.na(.data[[auc_col]]))
+  AUC <- df$roc_auc[1]
   max_auc <- df[[auc_col]] %>% max()
   idx_max_auc <- which(df[[auc_col]] == max_auc)[1]
   tr_max_auc <- df[[col_col]][idx_max_auc] %>% round(digits = 2)
   max_auc <- max_auc %>% round(digits = 2)
   p <- ggplot2::ggplot(data = df) +
     ggplot2::geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "grey")
-  if (!is.na(auc_col)) {
-    p <- p + ggplot2::geom_line(aes(x = .data[[x_col]], y = .data[[auc_col]]), color = "black")
+  # if (!is.na(auc_col)) {
+  #   p <- p + ggplot2::geom_line(aes(x = .data[[x_col]], y = .data[[auc_col]]), color = "black")
+  # }
+  if (length(colors) > 0) {
+    p <- p +
+      ggplot2::geom_point(aes(x = .data[[x_col]], y = .data[[y_col]], color = .data[[col_col]])) +
+      ggplot2::scale_color_gradientn(colors = colors, space = "Lab") +
+      ggplot2::geom_point(x = df[[x_col]][idx_max_auc], y = df[[y_col]][idx_max_auc],
+                            pch = 21, color = "black", size = 5)
+  } else {
+      p <- p +
+      ggplot2::geom_line(aes(x = get(x_col), y = get(y_col))) +
+      ggplot2::geom_point(x = df[[x_col]][idx_max_auc], y = df[[y_col]][idx_max_auc],
+                            pch = 21, fill = "red", color = "black", size = 5)
   }
-  p <- p +
-    ggplot2::geom_point(aes(x = .data[[x_col]], y = .data[[y_col]], color = .data[[col_col]])) +
-    ggplot2::geom_point(x = df[[x_col]][idx_max_auc], y = df[[y_col]][idx_max_auc],
-                        pch = 21, color = "black", size = 5) +
-    ggplot2::geom_text(x = df[[x_col]][idx_max_auc], y = df[[y_col]][idx_max_auc],
-                       label = paste0("AUC_tr = ", max_auc), vjust = -2, hjust = 1.5, size = 5, fontface = "plain") +
-    ggplot2::geom_text(x = df[[x_col]][idx_max_auc], y = df[[y_col]][idx_max_auc],
-                       label = paste0("threshold = ", tr_max_auc), vjust = 0, hjust = 1.5, size = 5, fontface = "plain") +
+    p <- p +
+    # ggplot2::geom_text(x = df[[x_col]][idx_max_auc], y = df[[y_col]][idx_max_auc],
+    #                    label = paste0("AUC_tr = ", max_auc), vjust = -2, hjust = 1.5, size = 5, fontface = "plain") +
+    ggplot2::geom_text(x = 0.81, y = 0.1,
+                         label = paste0("threshold = ", tr_max_auc), size = 4, fontface = "plain") +
     ggplot2::geom_text(x = 0.8, y = 0.05,
-                       label = paste0("AUC-ROC = ", round(AUC, digits = 2)), size = 7, fontface = "plain") +
-    ggplot2::scale_color_gradientn(colors = colors, space = "Lab") +
+                         label = paste0("AUC-ROC = ", round(AUC, digits = 2)), size = 4, fontface = "plain") +
     ggplot2::labs(title = plot_title,
                   subtitle = "Thresholds are sampled from the predicted values",
                   caption = paste(sep = "\n",
-                                  "The Black line indicates AUC-ROC in dependency of the threshold.",
-                                  "The selected point on the ROC curve is the threshold with maximal AUC-ROC."),
+                                  # "The Black line indicates AUC-ROC in dependency of the threshold.",
+                                  "The selected point is the threshold with maximal AUC-ROC."),
                   x = "FPR", y = "TPR") +
     ggplot2::theme_classic() +
     ggplot2::theme(

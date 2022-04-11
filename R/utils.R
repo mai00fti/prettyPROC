@@ -77,3 +77,17 @@ tnr <- function(tn, fp) {
 fnr <- function(tp, fn) {
   return(fn / (fn + tp))
 }
+
+#' Computate Matthews Correlation Coefficient (MCC) from a confusion matrix table
+#'
+#' @param table The table object produced by [caret::confusionMatrix()]
+#'
+#' @return The value for the MCC. It is in the range of [-1, 1] with values above 0 indicating a good correlation
+#'
+mcc <- function(table) {
+  d <- list("tp" = table[1], "fn" = table[2], "fp" = table[3], "tn" = table[4])
+  n <- d$tp * d$tn - d$fp * d$fn
+  a <- (d$tp + d$fp) * (d$tp + d$fn)
+  b <- (d$tn + d$fp) * (d$tn + d$fn)
+  return(n / (sqrt(a) * sqrt(b)))
+}
