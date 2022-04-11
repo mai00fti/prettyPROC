@@ -58,8 +58,6 @@ pretty_roc_curve <- function(df, plot_title = "Receiver-operator curve",
                             pch = 21, fill = "red", color = "black", size = 5)
   }
     p <- p +
-    # ggplot2::geom_text(x = df[[x_col]][idx_max_auc], y = df[[y_col]][idx_max_auc],
-    #                    label = paste0("AUC_tr = ", max_auc), vjust = -2, hjust = 1.5, size = 5, fontface = "plain") +
     ggplot2::geom_text(x = 0.81, y = 0.1,
                          label = paste0("threshold = ", tr_max_auc), size = 4, fontface = "plain") +
     ggplot2::geom_text(x = 0.8, y = 0.05,
@@ -67,7 +65,6 @@ pretty_roc_curve <- function(df, plot_title = "Receiver-operator curve",
     ggplot2::labs(title = plot_title,
                   subtitle = "Thresholds are sampled from the predicted values",
                   caption = paste(sep = "\n",
-                                  # "The Black line indicates AUC-ROC in dependency of the threshold.",
                                   "The selected point is the threshold with maximal AUC-ROC."),
                   x = "FPR", y = "TPR") +
     ggplot2::theme_classic() +

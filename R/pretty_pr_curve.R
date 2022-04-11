@@ -61,10 +61,6 @@ pretty_pr_curve <- function(df, plot_title = "Precision-recall curve",
                  pch = 21, color = "black", fill = "red", size = 5)
   }
   p <- p +
-    # geom_text(x = df[[x_col]][idx_max_f1], y = df[[y_col]][idx_max_f1],
-    #           label = paste0("F1 = ", max_f1), vjust = -2, hjust = -0.5, size = 5, fontface = "plain") +
-    # geom_text(x = df[[x_col]][idx_max_f1], y = df[[y_col]][idx_max_f1],
-    #           label = paste0("threshold = ", tr_max_f1), vjust = 0, hjust = -0.5, size = 5, fontface = "plain") +
     ggplot2::geom_text(x = 0.8, y = 0.1,
                        label = paste0("threshold = ", tr_max_f1), size = 4, fontface = "plain") +
     ggplot2::geom_text(x = 0.86, y = 0.05,
