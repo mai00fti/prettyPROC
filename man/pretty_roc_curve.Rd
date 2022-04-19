@@ -30,16 +30,17 @@ pretty_roc_curve(
 not want to show the AUC line}
 
 \item{colors}{- A vector of colors from which a gradient will be generated.
+An empty list will produce a single black line instead of a colored one.
 Default: c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")}
 }
 \value{
-A list containing the plot as ggplot2, the maximal AUC (or [auc_col] dep. on the threshold) and the threshold
-that corresponds to this max value.
+The plot as ggplot2.
 }
 \description{
 This function plots a pretty ROC (receiver-operator curve) using the values from the [tidyverse::tibble()] that
 can be generated with the package function [get_threshold_data()].
-It colors the curve according to the value of the threshold, and annotates and labels the threshold with maximal AUC.
+G-mean as the unbiased evaluation metric for imbalanced classification is calculated from [sqrt(Recall*Specificity)].
+This function colors the curve according to the value of the threshold.
 }
 \examples{
 y_true <- sample(c(0,1), replace = TRUE, size = 1000)

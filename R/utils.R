@@ -91,3 +91,8 @@ mcc <- function(table) {
   b <- (d$tn + d$fp) * (d$tn + d$fn)
   return(n / (sqrt(a) * sqrt(b)))
 }
+
+gmean <- function (tpr, fpr) {
+  p <- tpr*(1-fpr)
+  return(ifelse(p<0, NULL, sqrt(p)))
+}

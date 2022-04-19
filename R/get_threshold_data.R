@@ -44,9 +44,11 @@ get_threshold_data <- function(truth, prediction) {
   P <- sum(truth)
   N <- LEN - P
   AUC <- ModelMetrics::auc(actual = truth, predicted = prediction)
-  thresholds <- prediction
+  # thresholds <- prediction
+  thresholds <- sample(0:100, 100, replace = FALSE) %>% sort() / 100
   # loop through all unique prediction values and use these as thresholds
-  return(do.call(rbind, lapply(thresholds, function(tr) {
+  df <- do.call(rbind, lapply(thresholds, function(tr) {
+    # tr <- thresholds[30]
     prediction_tr <- ifelse(prediction >= tr, 1, 0)
     prediction_tr_f <- factor(prediction_tr, levels = c(1, 0))
     cfm <- caret::confusionMatrix(data = prediction_tr_f, reference = truth_f)
@@ -62,15 +64,16 @@ get_threshold_data <- function(truth, prediction) {
           tibble::tibble_row(Metric = "pr_baseline", Value = P / LEN),
           tibble::tibble_row(Metric = "P_pred", Value = sum(prediction)),
           tibble::tibble_row(Metric = "N_pred", Value = LEN - sum(prediction)),
-          tibble::tibble_row(Metric = "fpr", Value = fpr(tn = cfm$table[1], fp = cfm$table[2])),
-          tibble::tibble_row(Metric = "tpr", Value = tpr(tp = cfm$table[4], fn = cfm$table[3])),
-          tibble::tibble_row(Metric = "tnr", Value = tnr(tn = cfm$table[1], fp = cfm$table[2])),
-          tibble::tibble_row(Metric = "fnr", Value = fnr(tp = cfm$table[4], fn = cfm$table[3])),
+          tibble::tibble_row(Metric = "fpr", Value = fpr(tn = cfm$table[4], fp = cfm$table[3])),
+          tibble::tibble_row(Metric = "tpr", Value = tpr(tp = cfm$table[1], fn = cfm$table[2])),
+          tibble::tibble_row(Metric = "tnr", Value = tnr(tn = cfm$table[4], fp = cfm$table[3])),
+          tibble::tibble_row(Metric = "fnr", Value = fnr(tp = cfm$table[1], fn = cfm$table[2])),
           tibble::tibble_row(Metric = "roc_auc_tr", Value = ModelMetrics::auc(truth_f, prediction_tr_f)),
-          tibble::tibble_row(Metric = "mcc_tr", Value = mcc(cfm$table))
+          tibble::tibble_row(Metric = "mcc_tr", Value = ModelMetrics::mcc(actual = truth, predicted = prediction,
+                                                                          cutoff = tr))
     ) %>%
       dplyr::mutate("threshold" = tr) %>%
       dplyr::mutate("roc_auc" = AUC)
   }))
-  )
+  return(df)
 }
