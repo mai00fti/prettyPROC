@@ -17,7 +17,7 @@
 #' `P, N, N_samples` - The numbers of positive, negative and total samples (extracted from the truth vector);
 #' `pr_baseline` - The baseline for a precision-recall curve. `pr_baseline = P / N_samples`
 #'
-#' All values are returned in a [tidyverse::tibble()] with the columns
+#' All values are returned in a [tibble::tibble()] with the columns
 #' `Metric` - containing the name of the metric;
 #' `Value` - containing the value of the metric;
 #' `threshold` - containing the threshold, for threshold independet metrics, the metric value is the same for all
@@ -39,6 +39,8 @@
 #'
 #' data_thresholds <- select_threshold(df = data, metrics = c("mcc_tr"), optimize = c("max"))
 #'
+#' @importFrom magrittr %>%
+#'
 #' @export
 select_threshold <- function(df,
                              metrics = c("mcc_tr", "Gmean", "F1", "Balanced Accuracy", "Precision", "Recall"),
@@ -47,28 +49,28 @@ select_threshold <- function(df,
   names(optimize) <- metrics
 
   # compute Gmean
-  tmp <- df %>% filter(Metric %in% c("Recall", "Specificity"))
+  tmp <- df %>% dplyr::filter(Metric %in% c("Recall", "Specificity"))
   df <- rbind(df,
               do.call(rbind, lapply(tmp$threshold %>% unique(), function(t) {
                 row <- tmp %>%
-                  filter(threshold == t) %>%
-                  pivot_wider(names_from = Metric, values_from = Value)
-                tibble_row(Metric = "Gmean", Value = sqrt(row$Recall * row$Specificity),
-                           threshold = t, roc_auc = tmp$roc_auc[1])
+                  dplyr::filter(threshold == t) %>%
+                  tidyr::pivot_wider(names_from = Metric, values_from = Value)
+                tibble::tibble_row(Metric = "Gmean", Value = sqrt(row$Recall * row$Specificity),
+                                   threshold = t, roc_auc = tmp$roc_auc[1])
               })))
 
   # select all best thresholds
   return(do.call(rbind, lapply(metrics, function(m) {
-    tmp <- df %>% filter(Metric == m)
+    tmp <- df %>% dplyr::filter(Metric == m)
     opt_metric <- tmp %>%
-      filter(!is.na(Value)) %>%
-      pull(Value)
+      dplyr::filter(!is.na(Value)) %>%
+      dplyr::pull(Value)
     opt_metric <- ifelse(optimize[[m]] == "max", max(opt_metric), min(opt_metric))
     opt_metric_value <- tmp %>%
-      filter(Value >= opt_metric) %>%
-      pull(Value) %>%
+      dplyr::filter(Value >= opt_metric) %>%
+      dplyr::pull(Value) %>%
       min()
     opt_metric_value_idx <- which(tmp$Value == opt_metric_value)[1]
-    slice(tmp, opt_metric_value_idx) %>% select(Metric, Value, threshold)
+    dplyr::slice(tmp, opt_metric_value_idx) %>% dplyr::select(Metric, Value, threshold)
   })))
 }

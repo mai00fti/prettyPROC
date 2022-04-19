@@ -17,7 +17,7 @@
 #' `P, N, N_samples` - The numbers of positive, negative and total samples (extracted from the truth vector);
 #' `pr_baseline` - The baseline for a precision-recall curve. `pr_baseline = P / N_samples`
 #'
-#' All values are returned in a [tidyverse::tibble()] with the columns
+#' All values are returned in a [tibble::tibble()] with the columns
 #' `Metric` - containing the name of the metric;
 #' `Value` - containing the value of the metric;
 #' `threshold` - containing the threshold, for threshold independet metrics, the metric value is the same for all
@@ -36,6 +36,8 @@
 #' data <- get_threshold_data(truth = y_true, prediction = y_predicted)
 #' data %>% head()
 #' data %>% colnames()
+#'
+#' @importFrom magrittr %>%
 #'
 #' @export
 get_threshold_data <- function(truth, prediction) {

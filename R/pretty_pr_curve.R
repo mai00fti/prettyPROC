@@ -13,6 +13,8 @@
 #'                  not want to show the AUC line
 #' @param colors - A vector of colors from which a gradient will be generated.
 #'                 Default: c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")
+#' @param annotate A threshold between 0 and 1 (digits = 2) that should be annotated at the curve. You may select one
+#'                 of the thresholds that you can get using the package function [select_threshold].
 #'
 #' @return The plot as ggplot2.
 #'
@@ -24,11 +26,14 @@
 #'                       plot_title = "Precision-recall curve")
 #' show(pr$plot)
 #'
+#' @importFrom magrittr %>%
+#'
 #' @export
 pretty_pr_curve <- function(df, plot_title = "Precision-recall curve",
                             x_col = "Recall", y_col = "Precision", col_col = "threshold", f1_col = "F1",
                             colors = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F",
-                                       "yellow", "#FF7F00", "red", "#7F0000")) {
+                                       "yellow", "#FF7F00", "red", "#7F0000"),
+                            annotate = NULL) {
   baseline <- df %>%
     filter(Metric == "pr_baseline") %>%
     head(1) %>%
@@ -41,10 +46,17 @@ pretty_pr_curve <- function(df, plot_title = "Precision-recall curve",
     geom_hline(aes(yintercept = baseline), linetype = "dashed", color = "grey") +
     lims(x = c(0, 1), y = c(0, 1)) +
     geom_path(aes(x = .data[[x_col]], y = .data[[y_col]], color = .data[[col_col]]),
-              size=2, linejoin = "round", lineend = "round")
+              size = 2, linejoin = "round", lineend = "round")
   if (length(colors) > 0) {
     p <- p +
       scale_color_gradientn(colors = colors, space = "Lab")
+  }
+  if (!is.null(annotate) & is.numeric(annotate)) {
+    tmp <- df_wide %>% dplyr::filter(threshold == annotate)
+    p <- p +
+      ggplot2::geom_point(data = tmp, aes(x = .data[[x_col]], y = .data[[y_col]]), size = 5) +
+      ggplot2::geom_text(data = tmp, aes(x = .data[[x_col]], y = .data[[y_col]]),
+                         size = 5, label = annotate, hjust = -0.5, vjust = 0.1)
   }
   p <- p +
     labs(title = plot_title,

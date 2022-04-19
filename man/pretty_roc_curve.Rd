@@ -12,7 +12,8 @@ pretty_roc_curve(
   col_col = "threshold",
   auc_col = "roc_auc_tr",
   colors = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00",
-    "red", "#7F0000")
+    "red", "#7F0000"),
+  annotate = NULL
 )
 }
 \arguments{
@@ -32,12 +33,15 @@ not want to show the AUC line}
 \item{colors}{- A vector of colors from which a gradient will be generated.
 An empty list will produce a single black line instead of a colored one.
 Default: c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")}
+
+\item{annotate}{A threshold between 0 and 1 (digits = 2) that should be annotated at the curve. You may select one
+of the thresholds that you can get using the package function [select_threshold].}
 }
 \value{
 The plot as ggplot2.
 }
 \description{
-This function plots a pretty ROC (receiver-operator curve) using the values from the [tidyverse::tibble()] that
+This function plots a pretty ROC (receiver-operator curve) using the values from the ['tibble::tibble()] that
 can be generated with the package function [get_threshold_data()].
 G-mean as the unbiased evaluation metric for imbalanced classification is calculated from [sqrt(Recall*Specificity)].
 This function colors the curve according to the value of the threshold.
