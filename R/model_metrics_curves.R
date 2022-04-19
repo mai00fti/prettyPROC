@@ -38,31 +38,31 @@ model_metrics_curves <- function(df, metrics, plot_title, threshold = NA) {
                          "tnr", "fnr", "roc_auc")
 
   metrics_not_available <- metrics[which(!metrics %in% available_metrics)]
-  if(length(metrics_not_available > 0)) {
+  if (length(metrics_not_available > 0)) {
     write(paste0("The following metric is not available and is discarded: '", metrics_not_available, "'", stderr()))
   }
   metrics <- metrics[which(metrics %in% available_metrics)]
-  if(length(metrics) > 0) {
-  p <- ggplot(df %>% filter(Metric %in% metrics),
-              aes(x = threshold, y = Value)) +
-    geom_line(aes(color = Metric))
-  if (length(threshold) == 0 | !is.na(threshold)) {
+  if (length(metrics) > 0) {
+    p <- ggplot2::ggplot(df %>% filter(Metric %in% metrics),
+                         ggplot2::aes(x = threshold, y = Value)) +
+      ggplot2::geom_line(aes(color = Metric))
+    if (length(threshold) == 0 | !is.na(threshold)) {
+      p <- p +
+        ggplot2::geom_vline(xintercept = threshold, linetype = "dashed", color = "grey")
+    }
     p <- p +
-      geom_vline(xintercept = threshold, linetype = "dashed", color = "grey")
-  }
-  p <- p +
-    guides(color = guide_legend(nrow = 1)) +
-    labs(title = plot_title,
-         subtitle = "Thresholds are sampled from the predicted values",
-         caption = paste(sep = "\n",
-                         # " Some metrics mean the same:",
-                         "Recall = Sensitivity, Precision = PPV, BalancedAccuracy = roc_auc")) +
-    theme_classic() +
-    theme(
-      legend.position = "top",
-      plot.title = element_text(face = "bold"),
-      plot.caption = element_text(face = "italic")
-    )
+      ggplot2::guides(color = guide_legend(nrow = 1)) +
+      ggplot2::labs(title = plot_title,
+                    subtitle = "Thresholds are sampled from the predicted values",
+                    caption = paste(sep = "\n",
+                                    # " Some metrics mean the same:",
+                                    "Recall = Sensitivity, Precision = PPV, BalancedAccuracy = roc_auc")) +
+      ggplot2::theme_classic() +
+      ggplot2::theme(
+        legend.position = "top",
+        plot.title = ggplot2::element_text(face = "bold"),
+        plot.caption = ggplot2::element_text(face = "italic")
+      )
     return(p)
   } else {
     write(paste0("None of your metrics is available. Returning NULL.", stderr()))

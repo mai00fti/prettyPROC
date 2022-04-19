@@ -44,8 +44,8 @@ pretty_roc_curve <- function(df, plot_title = "Receiver-operator curve",
     tidyr::pivot_wider(names_from = Metric, values_from = Value)
   abline_data <- tibble::tibble(x = c(0, 1), y = c(0, 1))
   p <- ggplot2::ggplot(data = df_wide) +
-    ggplot2::geom_line(data = abline_data, aes(x = x, y = y), linetype = "dashed", color = "grey") +
-    ggplot2::geom_path(aes(x = .data[[x_col]], y = .data[[y_col]], color = .data[[col_col]]),
+    ggplot2::geom_line(data = abline_data, ggplot2::aes(x = x, y = y), linetype = "dashed", color = "grey") +
+    ggplot2::geom_path(ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]], color = .data[[col_col]]),
                        size = 2, linejoin = "round", lineend = "round") +
     lims(x = c(0, 1), y = c(0, 1))
   if (length(colors) > 0) {
@@ -55,8 +55,8 @@ pretty_roc_curve <- function(df, plot_title = "Receiver-operator curve",
   if(!is.null(annotate) & is.numeric(annotate)) {
     tmp <- df_wide %>% dplyr::filter(threshold == annotate)
     p <- p +
-      ggplot2::geom_point(data = tmp, aes(x = .data[[x_col]], y = .data[[y_col]]), size = 5) +
-      ggplot2::geom_text(data = tmp, aes(x = .data[[x_col]], y = .data[[y_col]]),
+      ggplot2::geom_point(data = tmp, ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]]), size = 5) +
+      ggplot2::geom_text(data = tmp, ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]]),
                          size = 5, label = annotate, hjust = -0.5, vjust = 0.1)
   }
   p <- p +

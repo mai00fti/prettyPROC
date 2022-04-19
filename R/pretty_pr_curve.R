@@ -35,18 +35,18 @@ pretty_pr_curve <- function(df, plot_title = "Precision-recall curve",
                                        "yellow", "#FF7F00", "red", "#7F0000"),
                             annotate = NULL) {
   baseline <- df %>%
-    filter(Metric == "pr_baseline") %>%
+    dplyr::filter(Metric == "pr_baseline") %>%
     head(1) %>%
-    pull(Value)
+    dplyr::pull(Value)
   df_wide <- df %>%
     dplyr::filter(Metric %in% c(x_col, y_col, col_col, f1_col, "Recall", "Specificity")) %>%
     unique() %>%
     tidyr::pivot_wider(names_from = Metric, values_from = Value)
   p <- ggplot(data = df_wide) +
-    geom_hline(aes(yintercept = baseline), linetype = "dashed", color = "grey") +
-    lims(x = c(0, 1), y = c(0, 1)) +
-    geom_path(aes(x = .data[[x_col]], y = .data[[y_col]], color = .data[[col_col]]),
-              size = 2, linejoin = "round", lineend = "round")
+    ggplot2::geom_hline(ggplot2::aes(yintercept = baseline), linetype = "dashed", color = "grey") +
+    ggplot2::lims(x = c(0, 1), y = c(0, 1)) +
+    ggplot2::geom_path(ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]], color = .data[[col_col]]),
+                       size = 2, linejoin = "round", lineend = "round")
   if (length(colors) > 0) {
     p <- p +
       scale_color_gradientn(colors = colors, space = "Lab")
@@ -54,18 +54,18 @@ pretty_pr_curve <- function(df, plot_title = "Precision-recall curve",
   if (!is.null(annotate) & is.numeric(annotate)) {
     tmp <- df_wide %>% dplyr::filter(threshold == annotate)
     p <- p +
-      ggplot2::geom_point(data = tmp, aes(x = .data[[x_col]], y = .data[[y_col]]), size = 5) +
-      ggplot2::geom_text(data = tmp, aes(x = .data[[x_col]], y = .data[[y_col]]),
+      ggplot2::geom_point(data = tmp, ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]]), size = 5) +
+      ggplot2::geom_text(data = tmp, ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]]),
                          size = 5, label = annotate, hjust = -0.5, vjust = 0.1)
   }
   p <- p +
-    labs(title = plot_title,
+    ggplot2::labs(title = plot_title,
          subtitle = "Thresholds are sampled from the predicted values") +
-    theme_classic() +
-    theme(
+    ggplot2::theme_classic() +
+    ggplot2::theme(
       legend.position = "top",
-      plot.title = element_text(face = "bold"),
-      plot.caption = element_text(face = "italic")
+      plot.title = ggplot2::element_text(face = "bold"),
+      plot.caption = ggplot2::element_text(face = "italic")
     )
   return(p)
 }
