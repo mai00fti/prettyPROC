@@ -60,10 +60,11 @@ pretty_pr_curve <- function(df, plot_title = "Precision-recall curve",
   }
   p <- p +
     ggplot2::labs(title = plot_title,
-         subtitle = "Thresholds are sampled from the predicted values") +
+         subtitle = "100 thresholds selected, evenly distributed between 0 and 1") +
     ggplot2::theme_classic() +
     ggplot2::theme(
-      legend.position = "top",
+      legend.position = c(0.9, 0.9),
+      legend.box.background = ggplot2::element_rect(color = "grey"),
       plot.title = ggplot2::element_text(face = "bold"),
       plot.caption = ggplot2::element_text(face = "italic")
     )

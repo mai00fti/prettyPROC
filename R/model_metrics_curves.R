@@ -15,7 +15,7 @@
 #'                                             "tpr", "tnr", "fnr", "roc_auc"
 #'
 #' @param plot_title - A title for your plot
-#' @param threshold - The threshold that should be marked with a vertical dashed line. Optional.
+#' @param annotate - The threshold that should be marked with a vertical dashed line. Optional.
 #'
 #' @return A ggplot2 object is returned which can be extended by further ggplot functions, be showed and saved. NULL is
 #'         returned, if none of the requested metrics is available
@@ -24,14 +24,14 @@
 #' y_true <- sample(c(0,1), replace = TRUE, size = 1000)
 #' y_predicted <- runif(1000)
 #' data <- get_threshold_data(truth = y_true, prediction = y_predicted)
-#' plot <- model_metrics_curves(df = data,
-#'                              metrics = c("Sensitivity", "F1", "Balanced Accuracy"),
-#'                              plot_title = "SENS, F1 and balanced Accuracy across classification threshold",
-#'                              threshold = 0.5)
+#' plot <- model_metrics_curves(df = data)
 #' show(plot)
 #'
 #' @export
-model_metrics_curves <- function(df, metrics, plot_title, threshold = NA) {
+model_metrics_curves <- function(df,
+                                 metrics = c("Sensitivity", "F1", "Balanced Accuracy"),
+                                 plot_title = "Metrics development across threshold",
+                                 annotate = 0.5) {
   available_metrics <- c("Sensitivity", "Specificity", "Pos Pred Value", "Neg Pred Value", "Precision", "Recall",
                          "F1", "Prevalence", "Detection Rate", "Detection Prevalence", "Balanced Accuracy", "TP",
                          "FN", "FP", "TN", "P", "N", "N_samples", "pr_baseline", "P_pred", "N_pred", "fpr", "tpr",
@@ -45,18 +45,16 @@ model_metrics_curves <- function(df, metrics, plot_title, threshold = NA) {
   if (length(metrics) > 0) {
     p <- ggplot2::ggplot(df %>% filter(Metric %in% metrics),
                          ggplot2::aes(x = threshold, y = Value)) +
-      ggplot2::geom_line(aes(color = Metric))
-    if (length(threshold) == 0 | !is.na(threshold)) {
+      ggplot2::geom_line(ggplot2::aes(color = Metric))
+    if (length(annotate) == 0 | !is.na(annotate)) {
       p <- p +
-        ggplot2::geom_vline(xintercept = threshold, linetype = "dashed", color = "grey")
+        ggplot2::geom_vline(xintercept = annotate, linetype = "dashed", color = "grey")
     }
     p <- p +
-      ggplot2::guides(color = guide_legend(nrow = 1)) +
+      ggplot2::guides(color = ggplot2::guide_legend(nrow = 1)) +
       ggplot2::labs(title = plot_title,
-                    subtitle = "Thresholds are sampled from the predicted values",
-                    caption = paste(sep = "\n",
-                                    # " Some metrics mean the same:",
-                                    "Recall = Sensitivity, Precision = PPV, BalancedAccuracy = roc_auc")) +
+                    subtitle = "100 thresholds selected, evenly distributed between 0 and 1",
+                    x = "Threshold") +
       ggplot2::theme_classic() +
       ggplot2::theme(
         legend.position = "top",
